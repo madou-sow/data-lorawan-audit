@@ -22,3 +22,6 @@ report varying payload schemas across firmware revisions, or belong to
 completely separate device applications aggregated under a single
 network server instance.
 
+<div>
+ <img src="figures/lorawan_pipeline_audit-wt.png" width="800"  style="display:block; margin-botom:10px;">
+</div>
