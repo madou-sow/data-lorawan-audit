@@ -102,3 +102,47 @@ the Results section.</figcaption>
 <img src="figures/module_description-wt.png" />
 <figcaption>Figure 4: The processing sequence mirrors the pipeline diagram.</figcaption>
 </figure>
+
+### JSON Schema Robustness & Coverage Audit 
+
+Rather than querying rigid, static path keys, `01_extract.cpp` executes
+a recursive, alias-tolerant search across each frame's JSON payload
+hierarchy (`object.*` for physical measurements, `rxInfo``[``]` for
+reception metadata). This handles schema variations across ChirpStack
+v3/v4, The Things Network (TTN) v3, and flat-format payloads without
+throwing runtime key-errors. Two schema-level pitfalls, identified by
+diagnostic inspection of the raw file prior to full extraction, required
+specific handling: (i) the timestamp field is neither `time` nor
+`timestamp` but appears as either `_date` (an ISO 8601 string) or
+`_timestamp` (a **Unix epoch in milliseconds**, not seconds --- a common
+source of silent date-arithmetic errors if left unconverted); and (ii)
+Elsys EMS frames in this deployment do **not** always carry all four
+target variables jointly --- the first frames inspected during
+development carried only `temperature` and `humidity` (alongside
+unrelated fields such as `dewpoint`, `accMotion`, `pulseAbs`, `vdd`,
+`waterleak`, `x/y/z`). An early extraction attempt requiring all four
+variables in the same frame therefore rejected the *entire* corpus,
+including frames where $T$ and $H$ were both perfectly valid ---
+motivating the per-variable extraction strategy below.
+
+Each of the four target variables ($T$, $H$, $P$, $\mathrm{CO_2}$) is
+consequently extracted **independently**: a frame is retained as soon as
+it carries *at least one* target variable and a valid timestamp, with
+absent columns left empty in a sparse ("long") intermediate CSV rather
+than requiring a strict wide-format join. This design choice is what
+makes the coverage audit below possible in the first place --- it lets
+per-variable and per-`devEUI` presence be measured across the *entire*
+corpus without first discarding rows for missing columns.
+
+During extraction, an automated **Data Coverage Audit** evaluates
+payload completeness across all registered device identifiers (`devEUI`)
+and application boundaries (`applicationName`) in a single pass.
+
+**Tableau — Coverage per variable and per device (audit on the 421 937 frames)**
+
+| Variable | Raw Frames Present | Retained Frames | Coverage (% Total) | Coverage (% Retained) | Primary Application Scope | Distinct Nodes (`devEUI`) |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Temperature ($T$)** | $393\ 685$ | $214\ 076$ | $93.30\%$ | $100.00\%$ | `ELSYS_EMS` + `WYRES_BASE` | 5 |
+| **Humidity ($H$)** | $384\ 614$ | $205\ 005$ | $91.15\%$ | $95.76\%$ | `ELSYS_EMS` only | 4 |
+| **Pressure ($P$)** | $9\ 071$ | $0$ *(Isolated)* | $2.15\%$ | $0.00\%$ | `WYRES_BASE` only | 1 |
+| **Carbon Dioxide ($\mathrm{CO_2}$)** | $0$ | $0$ *(Absent)* | $0.00\%$ | $0.00\%$ | — | 0 |
