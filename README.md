@@ -103,7 +103,7 @@ the Results section.</figcaption>
 
 Rather than querying rigid, static path keys, `01_extract.cpp` executes
 a recursive, alias-tolerant search across each frame's JSON payload
-hierarchy (`object.*` for physical measurements, `rxInfo`[ ] for
+hierarchy (`object.*` for physical measurements, `rxInfo[]` for
 reception metadata). This handles schema variations across ChirpStack
 v3/v4, The Things Network (TTN) v3, and flat-format payloads without
 throwing runtime key-errors. Two schema-level pitfalls, identified by
