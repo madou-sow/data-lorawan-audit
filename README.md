@@ -98,3 +98,7 @@ decoded by a ChirpStack network server [Donsez et al.] (DOI
 logs to the four output reports (anomaly, MLP, PCA/cluster) that feed
 the Results section.</figcaption>
 </figure>
+
+<img src="figures/module_description-wt.png" />
+<figcaption>Figure 4: The processing sequence mirrors the pipeline diagram.</figcaption>
+</figure>
