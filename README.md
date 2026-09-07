@@ -65,3 +65,36 @@ span a spectrum of behaviors:
 targets a distinct, orthogonal anomaly signature within the clean
 bivariate (T,H) dataset.</figcaption>
 </figure>
+
+### Methodological Orthogonality Summary 
+
+The theoretical necessity for this multi-tiered architecture is
+summarized in the matrix below:
+
+| Detection Tier | Underlying Principle | Primary Target Anomaly Type | Invariant / Insensitive To |
+| --- | --- | --- | --- |
+| **Modified Z-Score** | Marginal distance from median in units of MAD | Extreme single-variable spikes ($T$ or $H$) | Multivariate correlation violations within normal marginal bounds |
+| **Isolation Forest** | Random axis-aligned space partitioning path length | Unusual joint combinations of $(T, H)$ | Slow, continuous calibration drifts over extended time horizons |
+| **PCA Reconstruction Error** | Geometric distance to the primary variance subspace | Departures from global thermo-hygrometric correlation ($e_i = \lvert y_{\mathrm{PC2}} \rvert$) | Anomalies aligned perfectly along the primary axis of variance ($\mathrm{PC1}$) |
+| **DBSCAN Noise Label** | Local density thresholding ($N_\varepsilon(p) < \mathrm{minPts}$) | Sparse spatial outliers and isolated noise points | Uniform dense clusters resulting from sensor resolution quantization |
+| **MLP Cross-Validation** | Deviation from learned physical/temporal dependency | Slow sensor drift and temporal micro-climate anomalies | Sudden isolated point anomalies uncoupled from diurnal/seasonal trends |
+
+
+## Data Processing & Analytical Pipeline 
+
+### Data Acquisition, Coverage Audit & Cleaning 
+
+The primary data acquisition and preprocessing layer is implemented in
+`01_extract.cpp`. The raw corpus comprises $421,937$ JSON-Lines frames
+transmitted by five distinct LoRaWAN nodes deployed at the Perret Tower
+(*Tour Perret*) in Grenoble, France, between June 2021 and June 2023,
+decoded by a ChirpStack network server [Donsez et al.] (DOI
+10.18709/perscido.2023.06.ds395).
+
+<div>
+ <img src="figures/pipeline_architecture-wt.png" width="800"  style="display:block; margin-botom:10px;">
+</div>
+<figcaption>Figure 3: Data processing and analytical pipeline: from raw LoRaWAN
+logs to the four output reports (anomaly, MLP, PCA/cluster) that feed
+the Results section.</figcaption>
+</figure>
