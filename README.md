@@ -92,15 +92,11 @@ decoded by a ChirpStack network server [Donsez et al.] (DOI
 10.18709/perscido.2023.06.ds395).
 
 <div>
- <img src="figures/pipeline_architecture-wt.png" width="800"  style="display:block; margin-botom:10px;">
+ <img src="figures/module_description-wt.png" width="800"  style="display:block; margin-botom:10px;">
 </div>
 <figcaption>Figure 3: Data processing and analytical pipeline: from raw LoRaWAN
 logs to the four output reports (anomaly, MLP, PCA/cluster) that feed
 the Results section.</figcaption>
-</figure>
-
-<img src="figures/module_description-wt.png" />
-<figcaption>Figure 4: The processing sequence mirrors the pipeline diagram.</figcaption>
 </figure>
 
 ### JSON Schema Robustness & Coverage Audit 
