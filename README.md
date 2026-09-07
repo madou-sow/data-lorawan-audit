@@ -25,3 +25,43 @@ network server instance.
 <div>
  <img src="figures/lorawan_pipeline_audit-wt.png" width="800"  style="display:block; margin-botom:10px;">
 </div>
+
+<figcaption>Figure 1: LoRaWAN telemetry ingestion and cleaning pipeline: the
+coverage audit (Step 1) is executed before any downstream analysis,
+separating structurally unusable variables (CO<span
+class="math inline">\(_2\)</span>, pressure) from the retained bivariate
+(T,H) core dataset.</figcaption>
+</figure>
+
+## Theoretical Framework & Methodology 
+
+### The Need for Multi-Tiered Anomaly Detection in IoT Streams 
+
+Anomalies in environmental time-series data do not manifest as a single
+homogeneous class. In edge-computing and IoT sensor contexts, anomalies
+span a spectrum of behaviors:
+
+- **Extreme Univariate Outliers:** Sensor spikes, electrical bursts, or
+  out-of-spec hardware failures.
+
+- **Multivariate Structural Anomalies:** Observations where each
+  individual feature remains within normal seasonal bounds, but their
+  *joint combination* violates fundamental physical laws or dominant
+  environmental correlations.
+
+- **Density-Based Clustered Anomalies / Noise:** Isolated noise points
+  residing in low-density regions of the multivariate feature space.
+
+- **Systemic Temporal Drifts:** Gradual, continuous calibration loss
+  (e.g., aging capacitive humidity elements) that evades point-based
+  detection because individual readings shift slowly over weeks or
+  months.
+
+  <div>
+ <img src="figures/cleanBivariate-wt.png" width="800"  style="display:block; margin-botom:10px;">
+</div>
+
+<figcaption>Figure 2: Four-tier complementary detection framework: each tier
+targets a distinct, orthogonal anomaly signature within the clean
+bivariate (T,H) dataset.</figcaption>
+</figure>
